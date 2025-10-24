@@ -95,7 +95,7 @@ def main():
     
     # Configure parameters
     annotation_types = ['segm', 'bbox', 'keypoints']    
-    ann_type = annotation_types[1]  # Using bbox for this demo
+    ann_type = annotation_types[0]  # Using segm for this demo
     prefix = 'person_keypoints' if ann_type == 'keypoints' else 'instances'
     
     # Set up file paths
