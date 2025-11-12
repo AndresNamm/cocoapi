@@ -170,6 +170,7 @@ class COCOeval:
             dt = [_ for cId in p.catIds for _ in self._dts[imgId,cId]]
         if len(gt) == 0 and len(dt) ==0:
             return []
+        # sort detections by confidence score and keep only top maxDets detections
         inds = np.argsort([-d['score'] for d in dt], kind='mergesort')
         dt = [dt[i] for i in inds]
         if len(dt) > p.maxDets[-1]:
@@ -187,6 +188,7 @@ class COCOeval:
         # compute iou between each dt and gt region
         iscrowd = [int(o['iscrowd']) for o in gt]
         ious = maskUtils.iou(d,g,iscrowd)
+        l = 1 
         return ious
 
     def computeOks(self, imgId, catId):
