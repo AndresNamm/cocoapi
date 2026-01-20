@@ -357,7 +357,8 @@ class COCOeval:
             for a, a0 in enumerate(a_list):
                 Na = a0*I0
                 for m, maxDet in enumerate(m_list):
-                    E = [self.evalImgs[Nk + Na + i] for i in i_list]
+                    E = [self.evalImgs[Nk + Na + i] for i in i_list] # retrieves for imageId for particular category for specific areaRanges the evalImg 
+                    # results with detections and ground truth mappings 
                     E = [e for e in E if not e is None]
                     if len(E) == 0:
                         continue
