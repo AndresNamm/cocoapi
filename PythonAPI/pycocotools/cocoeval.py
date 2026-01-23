@@ -310,8 +310,8 @@ class COCOeval:
                 'dtMatches':    dtm,
                 'gtMatches':    gtm,
                 'dtScores':     [d['score'] for d in dt],
-                'gtIgnore':     gtIg,
-                'dtIgnore':     dtIg,
+                'gtIgnore':     gtIg, # shape (G,)
+                'dtIgnore':     dtIg, # shape (T, D)
             }
 
     def accumulate(self, p = None):
@@ -384,18 +384,20 @@ class COCOeval:
                         tp = np.array(tp)
                         fp = np.array(fp)
                         nd = len(tp)
-                        rc = tp / npig
-                        pr = tp / (fp+tp+np.spacing(1))
+                        rc = tp / npig # recall array 
+                        pr = tp / (fp+tp+np.spacing(1)) # precision array 1D
                         q  = np.zeros((R,))
                         ss = np.zeros((R,))
+
+
+                        # SET RECALL AS LAST RECALL VALUE
 
                         if nd:
                             recall[t,k,a,m] = rc[-1]
                         else:
                             recall[t,k,a,m] = 0
 
-                        # numpy is slow without cython optimization for accessing elements
-                        # use python array gets significant speed improvement
+                        # INTERPOLATION FOR PRECISION SCORES
                         pr = pr.tolist(); q = q.tolist()
 
                         for i in range(nd-1, 0, -1):
@@ -409,8 +411,8 @@ class COCOeval:
                                 ss[ri] = dtScoresSorted[pi]
                         except:
                             pass
-                        precision[t,:,k,a,m] = np.array(q)
-                        scores[t,:,k,a,m] = np.array(ss)
+                        precision[t,:,k,a,m] = np.array(q) # 
+                        scores[t,:,k,a,m] = np.array(ss) #
         self.eval = {
             'params': p,
             'counts': [T, R, K, A, M],
